@@ -7,7 +7,6 @@ export default (props) => {
   const [resume, setResume] = useState({ name: '', nickname: '', skill: '', age: '' })
 
   useEffect(() => {
-    console.log(props.route.params)
     if(!loading){
       axios.get(`https://movie-api.igeargeek.com/users/profile/${props.route.params.id}`)
         .then((res) => {
