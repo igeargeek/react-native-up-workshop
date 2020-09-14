@@ -4,7 +4,7 @@ import ValidationComponent from 'react-native-form-validator'
 
 export default class ResumeForm extends ValidationComponent {
   state = {
-    fullName: '',
+    name: '',
     nickname: '',
     age: '',
     skill: ''
@@ -12,24 +12,24 @@ export default class ResumeForm extends ValidationComponent {
 
   _onSubmit = () => {
     this.validate({
-      fullName: { minlength: 3, maxlength: 7, required: true },
-      nickname: { email: true },
-      // number: {numbers: true},
-      // date: {date: 'YYYY-MM-DD'}
+      name: { required: true },
+      nickname: { required: true },
+      age: { required: true, numbers: true },
+      skill: { required: true },
     });
   }
 
   render() {
     return (
-      <View style={{ padding: 30, backgroundColor: 'white', minHeight: '100%' }}>
-        <Text>
+      <View style={styles.container}>
+        <Text style={styles.errorMessage}>
           {this.getErrorMessages()}
         </Text>
         <View>
           <Text>Full Name</Text>
           <TextInput
             style={styles.textInput}
-            onChangeText={text => this.setState({ fullName: text })}
+            onChangeText={text => this.setState({ name: text })}
             value={this.state.fullName}
           />
         </View>
@@ -61,7 +61,7 @@ export default class ResumeForm extends ValidationComponent {
         <View style={{ marginTop: 20 }}>
           <Button
             onPress={this._onSubmit}
-            title="Save"
+            title="Create Resume"
           />
         </View>
       </View>
@@ -69,65 +69,9 @@ export default class ResumeForm extends ValidationComponent {
   }
 }
 
-
-// const ResumeForm = () => {
-//   const [fullName, setFullName] = useState('')
-//   const [nickname, setNickname] = useState('')
-//   const [age, setAge] = useState('')
-//   const [skill, setSkill] = useState('')
-
-//   const onSubmit = () => {
-//     alert('fullName', fullName)
-//   }
-
-//   return (
-//     <View style={{ padding: 30, backgroundColor: 'white', minHeight: '100%' }}>
-//       <View>
-//         <Text>Full Name</Text>
-//         <TextInput
-//           style={styles.textInput}
-//           onChangeText={text => setFullName(text)}
-//           value={fullName}
-//         />
-//       </View>
-//       <View style={{ marginTop: 20 }}>
-//         <Text>Nickname</Text>
-//         <TextInput
-//           style={styles.textInput}
-//           onChangeText={text => setNickname(text)}
-//           value={nickname}
-//         />
-//       </View>
-//       <View style={{ marginTop: 20 }}>
-//         <Text>Age</Text>
-//         <TextInput
-//           style={styles.textInput}
-//           onChangeText={text => setAge(text)}
-//           value={age}
-//         />
-//       </View>
-//       <View style={{ marginTop: 20 }}>
-//         <Text>Skill</Text>
-//         <TextInput
-//           style={styles.textAreaInput}
-//           onChangeText={text => setSkill(text)}
-//           value={skill}
-//           multiline={true}
-//         />
-//       </View>
-//       <View style={{ marginTop: 20 }}>
-//         <Button
-//           onPress={onSubmit}
-//           title="Save"
-//         />
-//       </View>
-//     </View>
-//   )
-// }
-
 const styles = StyleSheet.create({
+  container: { padding: 30, backgroundColor: 'white', minHeight: '100%' },
   textInput: { height: 40, borderColor: 'gray', borderWidth: 1 },
-  textAreaInput: { height: 100, borderColor: 'gray', borderWidth: 1 }
+  textAreaInput: { height: 100, borderColor: 'gray', borderWidth: 1 },
+  errorMessage: { color: 'red', marginBottom: 20 }
 })
-
-// export default ResumeForm
