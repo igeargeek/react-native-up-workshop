@@ -1,31 +1,53 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native'
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  Alert,
+  Platform
+} from 'react-native'
 import ValidationComponent from 'react-native-form-validator'
 import axios from 'axios'
+import Camera from '../components/Camera'
 
 export default class ResumeForm extends ValidationComponent {
   state = {
+    loading: false,
     name: '',
     nickname: '',
     age: '',
-    skill: ''
+    skill: '',
+    takePictureMode: false,
+    avatar: '',
   }
 
   _onSubmit = () => {
     const isValid = this.validate({
+      avatar: { required: true },
       name: { required: true },
       nickname: { required: true },
       age: { required: true, numbers: true },
       skill: { required: true },
     });
-    if(isValid){
+    if (isValid) {
+      this.setState({ loading: true })
       const formData = new FormData();
-      formData.append('name',this.state.name)
-      formData.append('nickname',this.state.nickname)
-      formData.append('age',this.state.age)
-      formData.append('skill',this.state.skill)
+      const uri = this.state.avatar
+      formData.append('avatar', {
+        uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
+        type: 'image/jpeg',
+        name: 'avatar.jpg',
+      })
+      formData.append('name', this.state.name)
+      formData.append('nickname', this.state.nickname)
+      formData.append('age', this.state.age)
+      formData.append('skill', this.state.skill)
       const config = {
-        headers: { 'content-type': 'multipart/form-data' }
+        method: 'POST',
+        body: formData,
       }
       axios.post('https://movie-api.igeargeek.com/users/register', formData, config)
         .then((res) => {
@@ -40,16 +62,19 @@ export default class ResumeForm extends ValidationComponent {
           )
         }).catch((error) => {
           console.log('error :', error)
+        }).finally(() => {
+          this.setState({ loading: true })
         })
     }
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.errorMessage}>
           {this.getErrorMessages()}
         </Text>
+        <Camera onTakePicture={(photoUri) => this.setState({ avatar: photoUri })} />
         <View>
           <Text>Full Name</Text>
           <TextInput
@@ -83,13 +108,14 @@ export default class ResumeForm extends ValidationComponent {
             multiline={true}
           />
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 20, marginBottom: 80 }}>
           <Button
+            disabled={this.state.loading}
             onPress={this._onSubmit}
-            title="Create Resume"
+            title={this.state.loading ? 'Loading...' : 'Create Resume'}
           />
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }
