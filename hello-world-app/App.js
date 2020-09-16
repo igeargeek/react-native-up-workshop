@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Image } from 'react-native';
 
 export default function App() {
   const [input, setInput] = useState('')
@@ -7,6 +7,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Image source={{ uri: 'https://www.igeargeek.com/_nuxt/img/835647d.png' }} style={styles.logo} />
       <Text style={styles.title}>Hello World</Text>
       <TextInput
         value={input} onChangeText={(text) => setInput(text)}
@@ -31,6 +32,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 30
   },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 20
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -44,7 +50,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20
   },
-  buttonLayout: { 
+  buttonLayout: {
     flexDirection: 'row',
     marginTop: 20
   }
